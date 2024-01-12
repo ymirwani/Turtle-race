@@ -82,3 +82,38 @@ def print_distance(turtles):
     for turtle in turtles:
         dist = turtle.xcor() + 140
         turtle.write(dist, align="right", font =(15))
+
+def lazy_race(laziness_probability):
+    #draw the racetrack
+    turtle_names = ['O', 'L', 'E']
+    turtles, race_length = setup_race(3)
+    finish_line = race_length - 140
+
+    #start the race
+    while all(turtle.xcor() < finish_line for turtle in turtles):
+        race_round(turtles, laziness_probability)
+
+    #print the distance
+    print_distance(turtles)
+
+    #find the winner
+    for turtle in turtles:
+        if turtle.xcor() >= finish_line:
+            winner = turtle
+    
+    winner_name = turtle_names[turtles.index(winner)]
+    print("The winner is:", winner_name)
+    
+    done()
+
+    return winner_name
+
+def main():
+    #define laziness
+    laziness_probability = [0.4, 0.2, 0.3]
+
+    #start the race
+    lazy_race(laziness_probability)
+
+if __name__ == "__main__":
+    main()
