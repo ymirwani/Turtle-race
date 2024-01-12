@@ -54,3 +54,31 @@ def setup_race(n_turtles):
         swirl(turtles[i])
     
     return turtles, race_length
+
+def swirl(t):
+    ''' Makes the given turtle instance swirl'''
+    nb_turns = 2
+    for turn in range(nb_turns):
+        t.right(360/nb_turns)
+
+def nod(t):
+    ''' Makes the given turtle instance nod '''
+    t.left(45)
+    t.right(90)
+    t.left(45)
+
+def race_round(turtles, laziness_probability):
+    
+    '''makes the turtles decide whether they step or rest'''
+    for i in range(3):
+        choice = random()
+        if laziness_probability[i] > choice:
+            nod(turtles[i])
+        else:
+            turtles[i].forward(randrange(1, 16))
+
+def print_distance(turtles):
+    '''writes down the total distance that the turtles have traveled'''
+    for turtle in turtles:
+        dist = turtle.xcor() + 140
+        turtle.write(dist, align="right", font =(15))
