@@ -5,7 +5,7 @@ from turtle import *
 from random import *
 import sys
 
-def setup_race(n_turtles):
+def setup_race(n_turtles, race_length):
     ''' Setups a race of length 320 pixels with the given number of racers '''
 
     # Checks function input
@@ -14,7 +14,6 @@ def setup_race(n_turtles):
         return None
     
     # Initializes function values
-    race_length = 320
     n_gaps = 8
     gap_dist = race_length/n_gaps
     speed(10)
@@ -51,10 +50,21 @@ def setup_race(n_turtles):
         turtles[i].penup()
         turtles[i].goto(x_loc_start, y_loc[i])
         turtles[i].pendown()
-        swirl(turtles[i])
+        #swirl(turtles[i])
     
     return turtles, race_length
 
+def race_round(turtles, laziness_probability, power_ups):
+    '''makes the turtles decide whether they step, rest, or use a power-up'''
+    for i in range(len(turtles)):
+        choice = random()
+        if laziness_probability[i] > choice:
+            nod(turtles[i])
+        elif power_ups[i] > 0:
+            turtles[i].forward(randrange(16, 31))
+            power_ups[i] -= 1
+        else:
+            turtles[i].forward(randrange(1, 16))
 def swirl(t):
     ''' Makes the given turtle instance swirl'''
     nb_turns = 2
@@ -67,34 +77,22 @@ def nod(t):
     t.right(90)
     t.left(45)
 
-def race_round(turtles, laziness_probability):
-    
-    '''makes the turtles decide whether they step or rest'''
-    for i in range(3):
-        choice = random()
-        if laziness_probability[i] > choice:
-            nod(turtles[i])
-        else:
-            turtles[i].forward(randrange(1, 16))
-
 def print_distance(turtles):
     '''writes down the total distance that the turtles have traveled'''
     for turtle in turtles:
         dist = turtle.xcor() + 140
         turtle.write(dist, align="right", font =(15))
 
-def lazy_race(laziness_probability):
+def lazy_race(laziness_probability, race_length):
     #draw the racetrack
     turtle_names = ['O', 'L', 'E']
-    turtles, race_length = setup_race(3)
+    turtles, race_length = setup_race(3, race_length)
     finish_line = race_length - 140
+    power_ups = [1, 2, 1] # Each turtle has a certain number of power-ups
 
     #start the race
     while all(turtle.xcor() < finish_line for turtle in turtles):
-        race_round(turtles, laziness_probability)
-
-    #print the distance
-    print_distance(turtles)
+        race_round(turtles, laziness_probability, power_ups)
 
     #find the winner
     for turtle in turtles:
@@ -112,8 +110,11 @@ def main():
     #define laziness
     laziness_probability = [0.4, 0.2, 0.3]
 
+    # Randomize race length
+    race_length = randint(300, 500)
+
     #start the race
-    lazy_race(laziness_probability)
+    lazy_race(laziness_probability, race_length)
 
 if __name__ == "__main__":
     main()
